@@ -13,7 +13,7 @@ function createFeatures(earthquakeData) {
 
     // bind the location, magnitude, and depth from the data
     function onEachFeature(feature, layer) {
-        layer.bindPopup(`<h3>Location: ${feature.properties.place}</h3><hr><p>Magnitude: ${feature.properties.mag} | Depth: ${feature.geometry.coordinates[2]}<p>`);
+        layer.bindPopup(`<h3>Location: ${feature.properties.place}</h3><hr><h4>Magnitude: ${feature.properties.mag} | Depth: ${feature.geometry.coordinates[2]}<h4>`);
       }
     
       let earthquakes = L.geoJSON(earthquakeData, {
@@ -30,21 +30,33 @@ function createFeatures(earthquakeData) {
           });
         
   // Create an overlay object to hold our overlay.
-  let overlayMaps = {
-    Earthquakes: earthquakes
-  };
+  //let overlayMaps = {
+  //  Earthquakes: earthquakes
+ // };
 
-  // centered map at Denver, CO coordinates
+
+  // create map, centered on Denver, add layers
   let myMap = L.map("map", {
     center: [
         39.7643389,-104.8551114
     ],
     zoom: 4.5,
-    layers: [street, earthquakes]
+    layers: [
+        street,    
+        earthquakes
+    ]
   });
 
+  
+
+  // create the legend
+  let legend = L.control({
+    position: "bottomright"
+});
+
+
   // Add the layer control to the map.
-  L.control.layers(overlayMaps).addTo(myMap);
+  //L.control.layers(overlayMaps).addTo(myMap);
 
 }
 
