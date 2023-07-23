@@ -11,9 +11,9 @@ function createFeatures(earthquakeData) {
     console.log("Earthquake Data:")
     console.log(earthquakeData);
 
-    // bind the location and magnitude from the data
+    // bind the location, magnitude, and depth from the data
     function onEachFeature(feature, layer) {
-        layer.bindPopup(`<h3>${feature.properties.place}</h3><hr><p>${feature.properties.mag} magnitude<p>`);
+        layer.bindPopup(`<h3>Location: ${feature.properties.place}</h3><hr><p>Magnitude: ${feature.properties.mag} | Depth: ${feature.geometry.coordinates[2]}<p>`);
       }
     
       let earthquakes = L.geoJSON(earthquakeData, {
@@ -27,21 +27,8 @@ function createFeatures(earthquakeData) {
 
         let street = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          })
-        
-          let topo = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
-            attribution: 'Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
           });
         
-    
-   
-
-  // Create a baseMaps object.
-  let baseMaps = {
-    "Street Map": street,
-    "Topographic Map": topo
-  };
-
   // Create an overlay object to hold our overlay.
   let overlayMaps = {
     Earthquakes: earthquakes
@@ -56,12 +43,8 @@ function createFeatures(earthquakeData) {
     layers: [street, earthquakes]
   });
 
-  // Create a layer control.
-  // Pass it our baseMaps and overlayMaps.
   // Add the layer control to the map.
-  L.control.layers(baseMaps, overlayMaps, {
-    collapsed: false
-  }).addTo(myMap);
+  L.control.layers(overlayMaps).addTo(myMap);
 
 }
 
