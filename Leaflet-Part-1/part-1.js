@@ -5,7 +5,7 @@ d3.json(url).then(function (data) {
     console.log(data.features);
 
     createFeatures(data.features);
-});
+})
 
 function createFeatures(earthquakeData) {
     console.log("Earthquake Data:")
@@ -13,30 +13,24 @@ function createFeatures(earthquakeData) {
 
     // bind the location, magnitude, and depth from the data
     function onEachFeature(feature, layer) {
-        layer.bindPopup(`<h3>Location: ${feature.properties.place}</h3><hr><h4>Magnitude: ${feature.properties.mag} | Depth: ${feature.geometry.coordinates[2]}<h4>`);
-      }
-    
-      let earthquakes = L.geoJSON(earthquakeData, {
+    layer.bindPopup(`<h3>Location: ${feature.properties.place}</h3><hr><h4>Magnitude: ${feature.properties.mag} | Depth: ${feature.geometry.coordinates[2]}<h4>`);
+    }  
+    let earthquakes = L.geoJSON(earthquakeData, {
+        style: mapStyle, 
         onEachFeature: onEachFeature
-      });
+        })
 
-      createMap(earthquakes);
-    }
+        createMap(earthquakes);
+}
     
-    function createMap(earthquakes) {
+function createMap(earthquakes) {
 
-        let street = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          });
+    let street = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        })
         
-  // Create an overlay object to hold our overlay.
-  //let overlayMaps = {
-  //  Earthquakes: earthquakes
- // };
-
-
-  // create map, centered on Denver, add layers
-  let myMap = L.map("map", {
+    // create map, centered on Denver, add layers
+    let myMap = L.map("map", {
     center: [
         39.7643389,-104.8551114
     ],
@@ -45,19 +39,45 @@ function createFeatures(earthquakeData) {
         street,    
         earthquakes
     ]
-  });
+    })
+    // create the legend
+    let legend = L.control({
+    position: "bottomright"
+    })
+    
+        
+    } 
+
+function mapStyle(feature) {
+    return{
+    fillColor: getColor(feature.geometry.coordinates[2])
+    };
+}      
+
+function getColor(depth) {
+    switch (true) {
+      case depth > 90:
+        return "#EA2C2C";
+      case depth > 70:
+        return "#EA822C";
+      case depth > 50:
+        return "#EE9C00";
+      case depth > 30:
+        return "#EECC00";
+      case depth > 10:
+        return "#D4EE00";
+      default:
+        return "#98EE00";
+    }
+  }    
+
+
 
   
 
-  // create the legend
-  let legend = L.control({
-    position: "bottomright"
-});
 
 
-  // Add the layer control to the map.
-  //L.control.layers(overlayMaps).addTo(myMap);
 
-}
+
 
 
